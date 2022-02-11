@@ -1,5 +1,3 @@
-"use-strict";
-
 const BOARD_WIDTH = 3;
 
 const WIN_CONDITIONS = [
@@ -14,7 +12,7 @@ const WIN_CONDITIONS = [
 ];
 
 let currentPlayer = 1;
-let numMoves = 0;
+let numOfMoves = 0;
 
 const gameSquares = document.querySelectorAll('.game-square');
 const gameHeading = document.getElementById('game-heading');
@@ -28,15 +26,17 @@ gameSquares.forEach((gameSquare, i) => {
 	});
 });
 
+restartButton.addEventListener('click', restartGame);
+
 function makeMove(gameSquare) {
 	gameSquare.textContent = currentPlayer === 1 ? 'X' : 'O';
 	gameSquare.disabled = true;
-	numMoves++;
+	numOfMoves++;
 
 	if (didPlayerWin()) {
-		gameHeading.textContent = `Player ${currentPlayer} Won!`;
+		gameHeading.textContent = `Player ${currentPlayer} won!`;
 		endGame();
-	} else if (numMoves >= BOARD_WIDTH * BOARD_WIDTH) {
+	} else if (numOfMoves >= BOARD_WIDTH * BOARD_WIDTH) {
 		gameHeading.textContent = `Tie Game!`;
 		endGame();
 	} else {
@@ -46,34 +46,32 @@ function makeMove(gameSquare) {
 }
 
 function didPlayerWin() {
-  const relativeText = currentPlayer === 1 ? 'X' : 'O';
-  return WIN_CONDITIONS.some(condition => {
-    return condition.every(gameSquarePosition => {
-      return gameSquares[gameSquarePosition].textContent === relativeText;
-    });
-  });
-}
-
-function endGame() {
-  restartButton.style.display = 'block';
-  gameSquares.forEach(gameSquare => {
-    gameSquare.disabled = true;
-  })
+	const relevantText = currentPlayer === 1 ? 'X' : 'O';
+	return WIN_CONDITIONS.some(condition => {
+		return condition.every(gameSquarePosition => {
+			return gameSquares[gameSquarePosition].textContent === relevantText;
+		});
+	});
 }
 
 function setCurrentPlayerHeading() {
-  gameHeading.textContent = `Player ${currentPlayer}'s turn!`
+	gameHeading.textContent = `Player ${currentPlayer}'s turn`;
 }
 
-restartButton.addEventListener('click', restartGame);
+function endGame() {
+	restartButton.style.display = 'block';
+	gameSquares.forEach(gameSquare => {
+		gameSquare.disabled = true;
+	});
+}
 
 function restartGame() {
-  currentPlayer = 1;
-  numMoves = 0;
-  setCurrentPlayerHeading();
-  gameSquares.forEach(gameSquare => {
-    gameSquare.disabled = false;
-    gameSquare.textContent = '';
-  });
-  restartButton.style.display = 'none';
+	currentPlayer = 1;
+	numOfMoves = 0;
+	setCurrentPlayerHeading();
+	gameSquares.forEach(gameSquare => {
+		gameSquare.textContent = '';
+		gameSquare.disabled = false;
+	})
+	restartButton.style.display = 'none';
 }
